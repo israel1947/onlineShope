@@ -1,4 +1,4 @@
-package aprendiendo.spring.store.serviceproduct.entity;
+package aprendiendo.spring.store.entity;
 
 import java.util.Date;
 

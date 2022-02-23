@@ -16,38 +16,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import aprendiendo.spring.store.entity.Category;
+import aprendiendo.spring.store.entity.Products;
 import aprendiendo.spring.store.service.ProductServices;
-import aprendiendo.spring.store.serviceproduct.entity.Category;
-import aprendiendo.spring.store.serviceproduct.entity.Products;
 
 @RestController//implementando un servicio REST
-@RequestMapping("/products")
+@RequestMapping(value="products")
 public class ProductsController {
     
     @Autowired
     public ProductServices productServices;
 
-    @GetMapping
-    public ResponseEntity<List<Products>>listProducts(@RequestParam(name = "category?Id", required = false) Long categoryId){
+    @GetMapping                                                            ///products?Id=1
+    public ResponseEntity<List<Products>>listProducts(@RequestParam(name = "categoryId", required = false) Long categoryId){
 
-        List<Products> products = new ArrayList<>();
-        if(null ==categoryId){
+        List<Products>products = new ArrayList<>();
+        if(null == categoryId){
            products = productServices.listAllProducts();
            if(products.isEmpty()){
             return ResponseEntity.noContent().build();//respuesta 204(sin contenido)
-            }
-
+          }
         }else{//Search by category
          products = productServices.findByCategory(Category.builder().id(categoryId).build());
          if(products.isEmpty()){
             return ResponseEntity.notFound().build();//not exist product by this category
-             }
+          }
         }
         return ResponseEntity.ok(products);
     }
 
     //GET  ESPECIFY PRODUCT
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "{id}")///products/1
     public ResponseEntity<Products> getProduct(@PathVariable("id") Long id){
         Products products = productServices.getProducts(id);
         if(null==products){
@@ -58,38 +57,38 @@ public class ProductsController {
 
     //INSERT PRODUCT IN THE DB
     @PostMapping
-    public ResponseEntity <Products> createProduct(@RequestBody Products products){
-        Products createProduct = productServices.createProducts(products);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createProduct);
+    public ResponseEntity <Products> createProducts(@RequestBody Products products){
+        Products productCreate = productServices.createProducts(products);
+        return ResponseEntity.status(HttpStatus.CREATED).body(productCreate);
 
     }
 
     //UPDATE PRODUCT
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = "{id}")
     public ResponseEntity<Products>updateProduct(@PathVariable("id") Long id, @RequestBody Products products){
         products.setId(id);
-    //UPDATE PRODUCT IN THE DB
+        //UPDATE PRODUCT IN THE DB
         Products productsDB = productServices.updateProducts(products);
-    //VERIFY THE PRODUCT HAS UPDATE OR IF EXIST
+        //VERIFY THE PRODUCT HAS UPDATE OR IF EXIST
         if(productsDB == null){
             return ResponseEntity.notFound().build();
          }
         return ResponseEntity.ok(productsDB);
     }
 
-    //DELET A PRODUCT
-    @DeleteMapping
+    //DELET A PRODUCT 
+    @DeleteMapping(value = "{id}")             
     public ResponseEntity<Products> deletProduct(@PathVariable(value="id") Long id){
         Products deletProducts = productServices.deleteProducts(id);
-        if(deletProducts ==null){
+        if(deletProducts == null){
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(deletProducts);
     }
 
     //UPDATE STOCK OF PRODUCT
-    @GetMapping(value ="/{id}/stock")
-    public ResponseEntity<Products>updateStock(@PathVariable Long id, @RequestParam(name="quantity", required = true) Double quantity){
+    @PutMapping(value ="{id}/stock")
+    public ResponseEntity<Products>updateStockProduct(@PathVariable Long id, @RequestParam(name="quantity", required = true) Double quantity){
         Products products = productServices.updateStock(id, quantity);
         if(products == null){
             return ResponseEntity.notFound().build();

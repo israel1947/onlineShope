@@ -1,4 +1,4 @@
-package aprendiendo.spring.store.serviceproduct;
+package aprendiendo.spring;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package aprendiendo.spring.store.serviceproduct;
+package aprendiendo.spring.store;
 
 
 import org.springframework.boot.SpringApplication;
@@ -12,3 +12,4 @@ public class ServiceProductApplication {
 	}
 
 }
+ 

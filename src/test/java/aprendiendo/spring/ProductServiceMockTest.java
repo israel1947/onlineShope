@@ -11,11 +11,12 @@ import org.mockito.*;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import aprendiendo.spring.store.entity.Category;
+import aprendiendo.spring.store.entity.Products;
 import aprendiendo.spring.store.repository.ProductsRepocitory;
 import aprendiendo.spring.store.service.ProductServiceImplement;
 import aprendiendo.spring.store.service.ProductServices;
-import aprendiendo.spring.store.serviceproduct.entity.Category;
-import aprendiendo.spring.store.serviceproduct.entity.Products;
+
 import org.springframework.test.context.ContextConfiguration;
 
 @SpringBootTest

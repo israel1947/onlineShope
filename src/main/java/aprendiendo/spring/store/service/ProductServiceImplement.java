@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import aprendiendo.spring.store.entity.Category;
+import aprendiendo.spring.store.entity.Products;
 import aprendiendo.spring.store.repository.ProductsRepocitory;
-import aprendiendo.spring.store.serviceproduct.entity.Category;
-import aprendiendo.spring.store.serviceproduct.entity.Products;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -20,6 +20,7 @@ public class ProductServiceImplement implements ProductServices {
     public Products createProducts(Products products) {//CREATE NEW PRODUCT
         products.setStatus("Created");//show status of product
         products.setCreateDate(new Date());//create date of product
+        
         return productsRepocitory.save(products);//Update of product
     }
 
@@ -55,6 +56,7 @@ public class ProductServiceImplement implements ProductServices {
         productsDB.setCategory(products.getCategory());
         products.setPrecio(products.getPrecio());
         //Update product in DB
+        productsDB.setStatus("Updated");
         return productsRepocitory.save(productsDB);
     }
 
@@ -71,7 +73,7 @@ public class ProductServiceImplement implements ProductServices {
     }
 
     @Override
-    public List<Products>findByCategory(Category category) {
+    public List<Products>findByCategory(Category category) {//GET PRODUCT BY CATEGORY
        return productsRepocitory.findByCategory(category);
     }
     

@@ -1,4 +1,4 @@
-package aprendiendo.spring.store.serviceproduct;
+package aprendiendo.spring;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import aprendiendo.spring.store.entity.Category;
+import aprendiendo.spring.store.entity.Products;
 import aprendiendo.spring.store.repository.ProductsRepocitory;
-import aprendiendo.spring.store.serviceproduct.entity.Category;
-import aprendiendo.spring.store.serviceproduct.entity.Products;
 
 @DataJpaTest
 public class ProductRepocitoryMockTest {
@@ -32,7 +32,7 @@ public class ProductRepocitoryMockTest {
                  .createDate(new Date()).build();
 
          productsRepocitory.save(products01);
-         List <Products> founds =  productsRepocitory.findByCategory(products01.getCategory());
+         List<Products> founds =  productsRepocitory.findByCategory(products01.getCategory());
          assertEquals(founds.size(), (3));
     
     }
