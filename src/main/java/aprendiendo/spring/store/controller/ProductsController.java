@@ -1,11 +1,19 @@
 package aprendiendo.spring.store.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import aprendiendo.spring.store.entity.Category;
 import aprendiendo.spring.store.entity.Products;
@@ -57,7 +66,10 @@ public class ProductsController {
 
     //INSERT PRODUCT IN THE DB
     @PostMapping
-    public ResponseEntity <Products> createProducts(@RequestBody Products products){
+    public ResponseEntity <Products> createProducts(@Validated @RequestBody Products products, BindingResult result){
+        if(result.hasErrors()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.formatMessage(result));
+        }
         Products productCreate = productServices.createProducts(products);
         return ResponseEntity.status(HttpStatus.CREATED).body(productCreate);
 
@@ -94,5 +106,28 @@ public class ProductsController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(products);
+    }
+
+    private String formatMessage(BindingResult result){
+        List<Map<String, String>> erros = result.getFieldErrors().stream()//GET ALL ERROS GENERATED
+
+            .map(err->{//CATCH EACH THE ELEMNTS OF FLOW
+              Map<String, String> error = new HashMap<>();
+              error.put(err.getField(), err.getDefaultMessage());
+              return error;
+
+         }).collect(Collectors.toList());//CONVERT IN A LIST
+         ErrorMessage errorMessage = ErrorMessage.builder()
+             .code("01")
+             .message(erros).build();
+
+        ObjectMapper mapper = new ObjectMapper();//TRANSFORM METHOD ERRORMESSAGE  AND CONVERT A JSONSTRING
+        String jsonString="";
+        try {
+            jsonString = mapper.writeValueAsString(errorMessage);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return jsonString;
     }
 }
